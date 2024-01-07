@@ -1,17 +1,9 @@
-// Copyright (c) 2016-2023 The CryptoCoderz Team / Espers
+// Copyright (c) 2016-2024 The CryptoCoderz Team / Espers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "blockparams.h"
-#include "chainparams.h"
-#include "consensus/checkpoints.h"
-#include "database/db.h"
 #include "consensus/fork.h"
-#include "util/init.h"
-#include "consensus/kernel.h"
-#include "node/net.h"
-#include "database/txdb.h"
-#include "consensus/velocity.h"
 #include "main.h"
 
 using namespace std;

@@ -1,12 +1,10 @@
-// Copyright (c) 2016-2023 The CryptoCoderz Team / Espers
+// Copyright (c) 2016-2024 The CryptoCoderz Team / Espers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef ESPERS_BLOCKPARAMS_H
 #define ESPERS_BLOCKPARAMS_H
 
 #include "node/net.h"
-#include "chain.h"
-#include "primitives/bignum.h"
 
 #define START_XNODE_PAYMENTS_TESTNET      9993058800  // OFF (NOT TOGGLED)
 #define START_XNODE_PAYMENTS              9993058800  // OFF (NOT TOGGLED)

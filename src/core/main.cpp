@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
-// Copyright (c) 2016-2023 The CryptoCoderz Team / Espers
+// Copyright (c) 2016-2024 The CryptoCoderz Team / Espers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,6 +27,7 @@
 #include "xnode/xnodemngr.h"
 #include "xnode/xnodereward.h"
 #include "deminode/deminet.h"
+#include "deminode/demisync.h"
 #include "ui/ui_interface.h"
 
 using namespace std;
@@ -1871,9 +1872,11 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
     // Ensure reorganize direction sanity
     if (fMergeReverse) {
         // Only allow reverse reorgs from Demi-nodes
-        // (Override for back-to-block command)
+        // (Override for back-to-block and demi-reorg-type commands)
         if((fDemiPeerRelay(GetRelayPeerAddr) && fDemiNodes) || fRollBackCall) {
-            LogPrintf("Reorganize() : Authorized a reverse-reorganize, now executing...\n");
+            LogPrintf("Reorganize() : Authorized a Demi-node reverse-reorganize, now executing...\n");
+        } else if(PEER_REORG_TYPE == 1) {
+            LogPrintf("Reorganize() : Authorized a Peer reverse-reorganize, now executing...\n");
         } else {
             return error("Reorganize() : Denied a reverse-reorganize - Not authorized!");
         }
@@ -4252,7 +4255,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
 
         // Start block sync
         //
-        // Demi-nodes v0.5 alpha
+        // Demi-nodes v0.7 alpha
         //
         if (pto->fStartSync && !fImporting && !fReindex) {
             // Espers Demi-node rewrite...
@@ -4263,9 +4266,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
             // There are overrides and exceptions, please consult
             // the Demi-node documentation for more information.
             //
-
             pto->fStartSync = false;
-
             if(!fDemiNodes) {
                 PushGetBlocks(pto, pindexBest, uint256(0));
             } else {
@@ -4279,9 +4280,17 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
                     // Ensure handling of demi and standard failover
                     //
                     // Sync only if peer is a registered Demi-node
-                    // This is a limitation only of v0.5
+                    // This is a limitation only of v0.7
                     if(fDemiPeerRelay(pto->addrName)) {
+                        LogPrintf("Current peer is an acceptable Demi-node, downloading blocks!\n");
                         PushGetBlocks(pto, pindexBest, uint256(0));
+                    } else {
+                        if(!startDemiSync()) {
+                            pnodeSync = NULL;
+                            LogPrintf("Current peers are not suitable for sync relay, waiting for other connections...\n");
+                        } else {
+                            LogPrintf("Syncing started with Demi-node scan and connect!\n");
+                        }
                     }
                 }
             }

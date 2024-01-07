@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
-// Copyright (c) 2016-2023 The Espers developers
+// Copyright (c) 2016-2024 The Espers developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,6 @@
 
 #include "chainparams.h"
 #include "main.h"
-#include "util/util.h"
 
 #include <boost/assign/list_of.hpp>
 
